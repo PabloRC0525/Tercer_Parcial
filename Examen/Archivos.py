@@ -19,12 +19,13 @@ def ejecutaconsulta():
     tabla.delete(*tabla.get_children())
     # Inserta los nuevos datos en la tabla
     for usu in rUsu:
-        tabla.insert('', 'end', text=usu[0], values=(usu[1], usu[2], usu[3]))
+        tabla.insert('', 'end', text=usu[0], values=(usu[1], usu[2]))
     
 def ejecutadelete():
     controlador.eliminar(varElim.get())
  
- 
+def ejecutaACT(varNomAE, varAPAE):
+    controlador.actualizar(varAct.get(),varNomAE.get(), varAPAE.get())
 
 ventana = Tk()
 ventana.title("Cuentas")
@@ -65,6 +66,34 @@ tabla.heading('saldo', text='Saldo', anchor=tk.CENTER)
 tabla.pack() 
 
 Consultar= Button(pestaña2,text="Consultar",command=ejecutaconsulta).pack()
+
+#Pestaña 3: Actualizar 
+
+titulo3 = Label(pestaña3,text="Actualizar Usuario:",fg ="green",font=("Modern",18))
+titulo3.pack()
+
+varAct = tk.StringVar()
+lblidA = Label(pestaña3,text="Identificador de usuario:")
+lblidA.pack()
+txtidA = Entry(pestaña3,textvariable=varAct)
+txtidA.pack()
+
+varNomAE = tk.StringVar()
+lblNomAE = Label(pestaña3,text="Nuevo Numero de cuenta: ")
+lblNomAE.pack()
+txtNomAE = Entry(pestaña3,textvariable=varNomAE)
+txtNomAE.pack()
+
+varAPAE = tk.StringVar()
+lblAPAE = Label(pestaña3,text="Nuevos Saldo: ")
+lblAPAE.pack()
+txtAPAE = Entry(pestaña3,textvariable=varAPAE)
+txtAPAE.pack()
+
+
+btnACT = Button(pestaña3,text="Actualizar usuario", command=lambda: ejecutaACT(varNomAE, varAPAE))
+btnACT.pack()
+
 #Pestaña 4: Eliminar usuario
 titulo3 = Label(pestaña4,text="Eliminar Usuario:",fg ="red",font=("Modern",18))
 titulo3.pack()

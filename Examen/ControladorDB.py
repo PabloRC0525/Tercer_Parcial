@@ -43,7 +43,7 @@ class ControladorDB:
             try:
                 #4. Preparamos lo necesario
                 cursor=conx.cursor()
-                sqlselect= "select * from TBCuentas where id ="+id
+                sqlselect= "select * from TBCuentas where IDCuenta ="+id
                 #5. Ejecutamos y cerramos conexion
                 cursor.execute(sqlselect)
                 RSUsuario = cursor.fetchall()
@@ -69,6 +69,32 @@ class ControladorDB:
         except sqlite3.OperationalError:
             print("Error de consulta")
     
+    
+    def actualizar(self, id,num, sal):
+        conx = self.conexionDB()
+        # 2. Validar vacios
+        if(id==""):
+            messagebox.showwarning("Error","Ingresa un ID")
+        else:
+            if num == "" or sal == "":
+                messagebox.showwarning("Aguas!!", "Formulario incompleto")
+                conx.close()
+            else:
+                try:
+                    cursor = conx.cursor()
+                    cursor.execute("SELECT * FROM TBCuentas WHERE IDCuenta=" + id)
+                    if cursor.fetchone() is None:
+                        messagebox.showerror("Error", "El ID no existe")
+                    else:
+                        datos = (num, sal, id)
+                        sqlUpdate = "UPDATE TBCuentas SET NoCuenta=?, Saldo=? WHERE IDCuenta=?"
+                        cursor.execute(sqlUpdate, datos)
+                        conx.commit()
+                        conx.close()
+                        messagebox.showinfo("Exito", "Usuario actualizado exitosamente")
+                except sqlite3.OperationalError:
+                    print("Error de actualización")
+                    
     def eliminar(self, id):
         conx = self.conexionDB()
         # 2. Validar vacios
@@ -77,11 +103,11 @@ class ControladorDB:
         else:
             try:
                 cursor = conx.cursor()
-                cursor.execute("SELECT * FROM TBCuentas WHERE id=" + id)
+                cursor.execute("SELECT * FROM TBCuentas WHERE IDCuenta=" + id)
                 if cursor.fetchone() is None:
                     messagebox.showerror("Error", "El ID no existe")
                 else:
-                    sqldelete = "DELETE FROM TBCuentas WHERE id=?"
+                    sqldelete = "DELETE FROM TBCuentas WHERE IDCuenta=?"
                     cursor.execute(sqldelete, id)
                     conx.commit()
                     conx.close()
