@@ -83,8 +83,6 @@ class ControladorDB:
                 else:
                     sqldelete = "DELETE FROM TBCuentas WHERE id=?"
                     cursor.execute(sqldelete, id)
-                    sqlupdate = "UPDATE TBCuentas SET id=id-1 WHERE id > ?"
-                    cursor.execute(sqlupdate, id)
                     conx.commit()
                     conx.close()
                     messagebox.showinfo("Exito", "Usuario eliminado exitosamente")

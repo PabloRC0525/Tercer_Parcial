@@ -10,28 +10,19 @@ controlador = ControladorDB()
 
 def ejecutaInsert():
     controlador.guardarUsuario(varNum.get(),varSal.get())
-    
-def ejecutaSelect():
-    rUsu= controlador.consultarUsuario(varBus.get())
-    for usu in rUsu:
-        cadena= str(usu[0])+" "+str(usu[1])+" "+str(usu[2])
-
-    if(rUsu): 
-        textBus.config(state='normal')
-        textBus.delete(1.0, 'end')
-        textBus.insert('end', cadena)
-        textBus.config(state='disabled') 
-    else:
-        messagebox.showerror("Error","El usuario no existe en la base de datos")
+#Metodo que usa mi obj controlador para buscar un usuario
         
 def ejecutaconsulta():
+    # Obtiene los usuarios de la base de datos
     rUsu= controlador.consulta()
+    # Borra los datos existentes en la tabla
     tabla.delete(*tabla.get_children())
+    # Inserta los nuevos datos en la tabla
     for usu in rUsu:
-        tabla.insert('', 'end', text=usu[0], values=(usu[1], usu[2]))
-
+        tabla.insert('', 'end', text=usu[0], values=(usu[1], usu[2], usu[3]))
+    
 def ejecutadelete():
-    controlador.eliminar(varElim.get())  
+    controlador.eliminar(varElim.get())
  
  
 
@@ -58,22 +49,11 @@ txtSal = Entry(pestaña1,textvariable=varSal).pack()
 
 btnGuard = Button(pestaña1,text="Guardar usuario",command = ejecutaInsert).pack()
 
-#Pestaña 2: Buscar Cuenta
-titulo2 = Label(pestaña2,text="Buscar Cuenta:",fg ="green",font=("Modern",18)).pack()
 
-varBus=tk.StringVar()
-lblid= Label(pestaña2,text="Identificador de la Cuenta:")
-txtid= Entry(pestaña2,textvariable=varBus).pack()
-btnBusqueda= Button(pestaña2,text="Buscar",command=ejecutaSelect).pack()
+#Pestaña 2: Consultar usuarios
 
-subBus= Label(pestaña2,text= "Registrado:",fg="blue",font=("Modern",15)).pack()
-textBus = tk.Text(pestaña2, height=5, width=52)
-textBus.pack() 
-
-#Pestaña 3: Consultar usuarios
-
-subUS= Label(pestaña3,text= "Usuarios:",fg="blue",font=("Modern",15)).pack()
-tabla = ttk.Treeview(pestaña3)
+subUS= Label(pestaña2,text= "Usuarios:",fg="blue",font=("Modern",15)).pack()
+tabla = ttk.Treeview(pestaña2)
 tabla['columns'] = ('numero', 'saldo')
 tabla.column('#0', width=50, minwidth=50)
 tabla.column('numero', width=120, minwidth=120)
@@ -84,13 +64,13 @@ tabla.heading('numero', text='No. Cuenta', anchor=tk.CENTER)
 tabla.heading('saldo', text='Saldo', anchor=tk.CENTER)
 tabla.pack() 
 
-
+Consultar= Button(pestaña2,text="Consultar",command=ejecutaconsulta).pack()
 #Pestaña 4: Eliminar usuario
 titulo3 = Label(pestaña4,text="Eliminar Usuario:",fg ="red",font=("Modern",18))
 titulo3.pack()
 
 varElim = tk.StringVar()
-lblidE = Label(pestaña4,text="Identificador de usuario:")
+lblidE = Label(pestaña4,text="Identificador de Cuenta:")
 lblidE.pack()
 txtidE = Entry(pestaña4,textvariable=varElim)
 txtidE.pack()
@@ -101,10 +81,10 @@ btnElimina.pack()
 mensajeAE = tk.StringVar()
 lblMensajeAE = Label(pestaña4, textvariable=mensajeAE)
 lblMensajeAE.pack()
-Consultar= Button(pestaña3,text="Consultar",command=ejecutaconsulta).pack()
+
 panel.add(pestaña1,text="Formulario Cuentas")
-panel.add(pestaña2,text="Buscar Cuenta")
-panel.add(pestaña3,text="Consultar usuarios")
+panel.add(pestaña2,text="Consultar usuarios")
+panel.add(pestaña3,text="Actualizar")
 panel.add(pestaña4,text="Eliminar")
 
 
